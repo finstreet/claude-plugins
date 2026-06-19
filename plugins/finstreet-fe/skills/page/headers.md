@@ -48,11 +48,9 @@ Usage in a sub-page:
 />
 ```
 
-### FSP Document Exchange Header
+### Extended Sub-Page Header (FSP)
 
-**`FspFinancingCaseOverviewDocumentExchangePageHeader`** — `@/layouts/fsp/FspFinancingCaseOverviewDocumentExchangePageHeader`
-
-Wraps `FspFinancingCaseOverviewSubPageHeader` and adds a Switch toggle in `PageHeaderActions` for hiding completed document requests. Demonstrates the **extension pattern** — specialized behavior on top of the base header.
+When a specific sub-page needs an extra action in its header, wrap the base `FspFinancingCaseOverviewSubPageHeader` and pass an `actionComponent` (e.g. a Switch toggle) into `PageHeaderActions`. This is the **extension pattern** — specialized behavior layered on top of the base header without duplicating its navigation/subtitle logic.
 
 ### PM Sub-Page Header
 
@@ -60,11 +58,9 @@ Wraps `FspFinancingCaseOverviewSubPageHeader` and adds a Switch toggle in `PageH
 
 The PM (Property Manager) equivalent of `FspFinancingCaseOverviewSubPageHeader`. Same structure, but uses PM-specific routes for back navigation.
 
-### PM Document Exchange Header
+### Extended Sub-Page Header (PM)
 
-**`PMDocumentExchangePageSubHeader`** — `@/features/propertyManagement/components/PMDocumentExchangePageSubHeader`
-
-Wraps `PropertyManagementCaseDetailsPageSubHeader` with a Switch action, same extension pattern as the FSP variant.
+The PM equivalent: wrap `PropertyManagementCaseDetailsPageSubHeader` and pass an `actionComponent`, same extension pattern as the FSP variant.
 
 ## The `header` Prop
 

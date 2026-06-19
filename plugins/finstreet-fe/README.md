@@ -53,8 +53,6 @@ Invoked as `/finstreet-fe:<name>`. Most also trigger automatically based on cont
 
 ### Composite features
 - `inquiry-process` — Multi-step form wizard using `@finstreet/forms` + `@finstreet/ui`
-- `contract-upload` — Contract upload page for signature process start
-- `document-exchange` — Document upload/download pages with collapsible request groups
 - `list-actions` — Pagination, search, sort, group, archived toggle, and reset for `InteractiveList`; also covers authoring new action slots
 - `e2e-test` — Playwright e2e tests (page objects, fixtures, form modules, dataTestIds)
 
