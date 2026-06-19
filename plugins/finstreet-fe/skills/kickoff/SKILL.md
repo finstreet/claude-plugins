@@ -31,14 +31,14 @@ Order tasks so that each step's output feeds the next step's input. Backend befo
 
 ## Skill Catalog
 
-Reference this catalog when mapping tasks to skills. Each entry describes what the skill does and when to reach for it.
+Reference this catalog when mapping tasks to skills. Each entry describes what the skill does and when to reach for it. Not all tasks require a skill from this list. There might be some generic work like research or investigation. You are always free to do work on your own but ONLY and ONLY if the description is not included in the task list.
 
 ### Backend & Data
 
-| Skill | What It Does | When to Use |
-|-------|-------------|-------------|
-| **secure-fetch** | Creates type-safe server/client HTTP request functions using `@finstreet/secure-fetch`. Covers schema, server.ts, and client.ts files. | Any time you need to call a backend API endpoint — GET, POST, PUT, DELETE. Always the first step when backend integration is needed. |
-| **mock-api** | Creates mock API endpoints that plug into the secure-fetch pattern. | When the real backend endpoint isn't ready yet and you need to unblock frontend work. |
+| Skill | What It Does | When to Use                                                                                                                                                                                                                                                                                                                    |
+|-------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **secure-fetch** | Creates type-safe server/client HTTP request functions using `@finstreet/secure-fetch`. Covers schema, server.ts, and client.ts files. | Any time you need to call a backend API endpoint — GET, POST, PUT, DELETE. Always the first step when backend integration is needed. If you figure out that one of the described tasks interacts with any request make sure to invoke this skill for editing an existing endpoint and of course call it for all new endpoints  |
+| **mock-api** | Creates mock API endpoints that plug into the secure-fetch pattern. | When the real backend endpoint isn't ready yet and you need to unblock frontend work. Oftentimes it is mentioned that the backend implementation is not ready yet - if it's not make sure to update the mock endpoint and to use it in these cases so that the FE can work with it and afterwards just has to replace the mock |
 
 ### Pages & Routing
 
@@ -51,11 +51,11 @@ Reference this catalog when mapping tasks to skills. Each entry describes what t
 
 ### Forms & Input
 
-| Skill | What It Does | When to Use |
-|-------|-------------|-------------|
-| **form** | Full form implementation using `@finstreet/forms` — schema, fields, action, default values, config, and components. | Any multi-field form: create, edit, or inquiry step forms. The most comprehensive skill. |
-| **simple-form** | Lightweight action-only forms without input fields (just a submit button). | Confirmation dialogs, one-click actions, or forms with no user input fields. |
-| **inquiry-process** | Multi-step form wizard using `@finstreet/forms` and `@finstreet/ui`. | When building a multi-page wizard (e.g., an onboarding flow with progress bar and multiple steps). |
+| Skill | What It Does | When to Use                                                                                                                                                                                                                                        |
+|-------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **form** | Full form implementation using `@finstreet/forms` — schema, fields, action, default values, config, and components. | Always use it when some kind of form is mentioned. Either creating new one or updating an existing form.                                                                                                                                           |
+| **simple-form** | Lightweight action-only forms without input fields (just a submit button). | Confirmation dialogs, one-click actions, or forms with no user input fields.                                                                                                                                                                       |
+| **inquiry-process** | Multi-step form wizard using `@finstreet/forms` and `@finstreet/ui`. | This is mostly needed when building a NEW inquiry process or updating the structure (not single fields) of an inquiry process. Updating (adding, removing, editing) fields should inside an inquiry process should still be done by the form skill |
 
 ### UI Components & Patterns
 
@@ -65,22 +65,6 @@ Reference this catalog when mapping tasks to skills. Each entry describes what t
 | **modal** | Implements modals — Zustand store, modal component, and optional open button. | When you need a dialog/modal overlay. |
 | **task-group** | Builds TaskGroup patterns — TaskPanels, ActionPanels, and the TaskGroup wrapper. | When displaying a set of tasks a user must complete before proceeding (e.g., checklist-style UI). |
 | **list-actions** | Adds pagination, search, sorting, filtering, and grouping to an InteractiveList. | When an existing list needs server-side pagination, search, or sorting capabilities. |
-| **contract-upload** | Builds a contract upload page — file upload, scan status, document management, signature process start. | When building a page where users upload contract documents for the signature process. |
-| **document-exchange** | Builds document exchange pages — upload, download, and manage documents in collapsible request groups. | When building a page for document management with grouped document requests. |
-
-### Testing & Quality
-
-| Skill | What It Does | When to Use |
-|-------|-------------|-------------|
-| **e2e-test** | Writes Playwright e2e tests — form modules, card CRUD, inquiry pages, happy paths. | After a feature is built and you need automated browser tests. |
-
-### Git & Workflow
-
-| Skill | What It Does | When to Use |
-|-------|-------------|-------------|
-| **commit** | Reviews, stages, commits, and pushes changes. | When you're done with a piece of work and want to commit. Invoke: `/finstreet-dev:commit`. Requires the `finstreet-dev` plugin. |
-| **pr** | Creates a pull request for the current branch. | After all work is committed and you want to open a PR. Invoke: `/finstreet-dev:pr`. Requires the `finstreet-dev` plugin. |
-| **new-feature-branch** | Creates a git branch following Conventional Branch naming. | At the very start of a new feature, before any code changes. Invoke: `/finstreet-dev:new-feature-branch`. Requires the `finstreet-dev` plugin. |
 
 ## Task Plan Format
 
@@ -90,50 +74,6 @@ Present the plan to the user as a numbered list. Each task should have:
 2. **Skill** — which skill to invoke (or "manual" if no skill applies)
 3. **Details** — what specifically needs to happen in this step
 4. **Depends on** — which prior tasks must be complete first
-
-### Example
-
-Given a prompt like: *"I need a new page where property managers can upload documents for a financing case. It needs a form for metadata, file upload, and a loading skeleton. The API endpoint exists already."*
-
-The plan would be:
-
-```
-## Task Plan
-
-1. **Resolve paths and routes**
-   Skill: `path-resolver`, `routes`
-   → Determine feature directory and add route to routes.ts
-
-2. **Create page shell**
-   Skill: `page`
-   → Build the Next.js page with metadata, params, and sub-page header
-   Depends on: 1
-
-3. **Build metadata form**
-   Skill: `form`
-   → Schema, fields, action, default values, config, and form components
-   Depends on: 1
-
-4. **Build document upload section**
-   Skill: `document-exchange` or `contract-upload`
-   → File upload with request groups and status tracking
-   Depends on: 1
-
-5. **Assemble page content**
-   Skill: `ui`
-   → Compose form and upload section into the page content component
-   Depends on: 2, 3, 4
-
-6. **Create loading skeleton**
-   Skill: `loading`
-   → Build loading.tsx that mirrors the page structure
-   Depends on: 5
-
-7. **Write e2e tests**
-   Skill: `e2e-test`
-   → Happy path test covering form submission and file upload
-   Depends on: 5
-```
 
 ## Creating the Task List
 
@@ -156,3 +96,5 @@ This gives the user a live progress tracker. As each task is worked on, update i
 5. **Be specific** — don't just say "build the form", say what the form is for, what fields it needs, what the action does
 6. **Preserve the user's intent** — the plan should accomplish everything the user asked for, not just the parts that map cleanly to skills
 7. **Mark non-skill tasks as "manual"** — some work doesn't have a matching skill, and that's fine
+8. **Use backend field names if available** - in our application we want the FE fields to have the same name as the BE fields. So if any fields are mentioned from BE side or in swagger make sure to **ALWAYS** use them. In some cases the field names might not be available. Go ahead and choose a reasonable fieldname but add a TODO comment so that it's easier for the agent to fix after we get the correct name from backend.
+9. Reference the [examples][example.md] file before you create the plan to know what is expected of you 
