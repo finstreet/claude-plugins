@@ -21,7 +21,7 @@ You take a freeform description of work and turn it into a structured, trackable
 
 Think about the work in terms of **what needs to exist when it's done** and work backwards:
 
-- Does it need a new API endpoint? → `secure-fetch` first
+- Does it touch the API at all — new endpoint or changed response? → `secure-fetch` first, then `mock-api` as its own task
 - Does it need a new page? → `page` (and probably `routes` before it)
 - Does it need a form? → `form` (and `page` for the shell)
 - Does it need a loading state? → `loading` (after the page exists)
@@ -37,8 +37,8 @@ Reference this catalog when mapping tasks to skills. Each entry describes what t
 
 | Skill | What It Does | When to Use                                                                                                                                                                                                                                                                                                                    |
 |-------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **secure-fetch** | Creates type-safe server/client HTTP request functions using `@finstreet/secure-fetch`. Covers schema, server.ts, and client.ts files. | Any time you need to call a backend API endpoint — GET, POST, PUT, DELETE. Always the first step when backend integration is needed. If you figure out that one of the described tasks interacts with any request make sure to invoke this skill for editing an existing endpoint and of course call it for all new endpoints  |
-| **mock-api** | Creates mock API endpoints that plug into the secure-fetch pattern. | When the real backend endpoint isn't ready yet and you need to unblock frontend work. Oftentimes it is mentioned that the backend implementation is not ready yet - if it's not make sure to update the mock endpoint and to use it in these cases so that the FE can work with it and afterwards just has to replace the mock |
+| **secure-fetch** | Creates type-safe server/client HTTP request functions using `@finstreet/secure-fetch`. Covers schema, server.ts, and client.ts files. | Any time you need to call a backend API endpoint — GET, POST, PUT, DELETE. Always the first step when backend integration is needed. If you figure out that one of the described tasks interacts with any request make sure to invoke this skill for editing an existing endpoint and of course call it for all new endpoints. **Every `secure-fetch` task is followed by a paired `mock-api` task** — see below; never fold the two together. |
+| **mock-api** | Creates **or updates** the mock handler behind an endpoint. The `EndpointConfig` and Zod schemas are identical to the real endpoint — only the import differs (`createMockServerFetchFunction` / `createMockClientFetchFunction` instead of the real ones), so switching between mock and real is a one-line change. | **Always, whenever the API changes** — there is no "only if the backend isn't ready". Every endpoint that `secure-fetch` adds or edits gets a matching `mock-api` task: create the handler if none exists, update it if one does (response shape, new fields, new status codes). This is **its own task**, separate from the `secure-fetch` task that defines the endpoint — `secure-fetch` describes the contract, `mock-api` backs it with data. The wiring is a **separate decision inside this task**:<br>• The ticket says the backend isn't live yet ("not on staging", "no swagger yet", "build it with the mocks") → point `server.ts`/`client.ts` at the **mock** functions, and add a task or TODO to swap back once the BE lands.<br>• Nothing said → point them at the **real** functions. The mock is still built and kept up to date; it just isn't wired in. |
 
 ### Pages & Routing
 
@@ -63,7 +63,7 @@ Reference this catalog when mapping tasks to skills. Each entry describes what t
 |-------|-------------|-------------|
 | **ui** | Expert guide to PandaCSS layout primitives and `@finstreet/ui` components. | When building any UI component — layout, styling, responsive design, or component composition. |
 | **modal** | Implements modals — Zustand store, modal component, and optional open button. | When you need a dialog/modal overlay. |
-| **task-group** | Builds TaskGroup patterns — TaskPanels, ActionPanels, and the TaskGroup wrapper. | When displaying a set of tasks a user must complete before proceeding (e.g., checklist-style UI). |
+| **task-group** | Builds **and edits** TaskGroups on case/detail overviews — TaskPanels (the cards in the `tasks` column) and ActionPanels (the buttons in the `actions` column on the right), plus the TaskGroup wrapper. | **Any** change to a `*TaskGroup.tsx`, `*TaskPanel`, or `*ActionPanel` — creating one, but equally adding, removing, or moving a panel or an **action**. Reach for it whenever a ticket says "an action on the right", "a button next to the section", "add X to the <section name> section", or replaces the contents of an existing panel. The panel's inner content may still be built by `ui`/`form`/`list-actions`, but the panel's and the action's **placement** is always this skill. |
 | **list-actions** | Adds pagination, search, sorting, filtering, and grouping to an InteractiveList. | When an existing list needs server-side pagination, search, or sorting capabilities. |
 
 ## Task Plan Format
