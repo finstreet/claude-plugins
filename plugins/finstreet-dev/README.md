@@ -32,6 +32,7 @@ Invoked as `/finstreet-dev:<name>`. All user-invoked only — no automatic trigg
 - `new-feature-branch` — Create a branch using the [Conventional Branch](https://conventional-branch.github.io) naming convention. Auto-detects the trunk branch (`dev`, `main`, or `master`).
 - `commit` — Review, stage, commit, and push current changes. Ticket prefix is optional; uses HEREDOC-safe multi-line messages.
 - `pr` — Create a pull request against the repo's trunk branch (auto-detected). Pushes the current branch first if it isn't on the remote yet; checks for an existing PR to avoid duplicates.
+- `jira-flow` — End-to-end orchestrator: takes a Jira issue (URL, key, or pasted text) and runs it through `new-feature-branch` → `finstreet-fe:kickoff` for planning → implementation → `commit` → `pr`. Use when you want to go from ticket to PR in one shot.
 
 ## Changelog
 
