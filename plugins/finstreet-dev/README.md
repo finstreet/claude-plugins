@@ -36,6 +36,9 @@ Invoked as `/finstreet-dev:<name>`. All user-invoked only — no automatic trigg
 
 ## Changelog
 
+### 1.1.0
+- Add the `jira-flow` skill — an end-to-end orchestrator that takes a Jira issue and runs it through branching, `finstreet-fe:kickoff` planning, implementation, commit, and PR.
+
 ### 1.0.0
 - Extracted from the `finstreet-fe` plugin (previously `automation`) into its own plugin so non-frontend projects can install just the workflow skills.
 - Auto-detect the trunk branch (`dev` / `main` / `master`) in `new-feature-branch` and `pr`.

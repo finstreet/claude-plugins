@@ -71,6 +71,14 @@ Invoked as `/finstreet-fe:<name>`. Most also trigger automatically based on cont
 
 ## Changelog
 
+### 1.1.0
+- Document how `/permissions` works in `secure-fetch`: it is fetched once at login by the auth plugin, never through secure-fetch; new permission fields must be optional and chained at every hop; permissions gate entry, not content.
+- Tighten the `kickoff` catalog so `task-group` fires on any panel or action change — not just when creating one — and `mock-api` runs whenever the API changes, as its own task paired with `secure-fetch`.
+- Rework the `kickoff` skill catalog and split its examples into `examples.md`.
+- Restructure `list-actions` into scaffold + actions, dropping Cases.
+- Expand `path-resolver` with top-level and shared directory structure.
+- Remove the `contract-upload`, `document-exchange`, `task-orchestrator`, and `workflows` skills.
+
 ### 1.0.0
 - Renamed from `automation` (invocations change from `/automation:*` to `/finstreet-fe:*`).
 - Moved under the renamed `finstreet-plugins` marketplace.
