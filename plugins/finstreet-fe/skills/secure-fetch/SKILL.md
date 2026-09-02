@@ -79,6 +79,54 @@ import { createClientFetchFunction } from "@/shared/backend/createClientFetchFun
 - For **building schemas** (pathVariables, result, payload, paginated), see [schema.md](schema.md)
 - For **building endpoint configs** and service exports (server/client, paginated), see [endpoint-config.md](endpoint-config.md)
 
+## Permissions Are Not a Normal Endpoint
+
+`GET /permissions` is already wired and is **not** yours to add or call. It is fetched once per
+login by `loadRailsPermissions` in `src/lib/railsAuthPlugin.ts` — a raw `fetch`, not a
+secure-fetch function — and the result is stored on the better-auth session by `src/auth.ts`.
+
+- **To read permissions**, call `authPermissions()` from `@/shared/auth/permissions`. It reads the
+  session, costs no request, and is the right thing to use in a page, layout, or server action.
+- **Never create or call a secure-fetch function for `/permissions`.** It would re-request on every
+  render, and the session copy is what the app actually gates on. If you find one in `server.ts`,
+  it is dead — leave it alone, don't wire it up.
+- **When the backend adds a permission field**, the only change is `PermissionsSchema` in
+  `src/shared/backend/models/auth/schema.ts`. No `server.ts` entry, and **no paired `mock-api`
+  task** — the auth plugin's raw fetch never passes through the mock registry.
+
+### Adding a permission field
+
+A new field on `PermissionsSchema` MUST be declared optional, and read with optional chaining at
+**every** hop:
+
+```typescript
+permissions?.comment?.create; // correct
+permissions?.comment.create; // compiles, throws at runtime
+```
+
+The plugin casts rather than parses, so a required field type-checks as present while being
+`undefined` at runtime, and `auth.ts` caches the session for 24h — live sessions lack a newly
+shipped field for up to a day after the backend deploys. Optionality is permanent, not a launch
+workaround.
+
+### What Permissions Are and Are Not For
+
+Permissions gate **entry** — whether an action is offered at all. They do NOT gate content. Reach
+for one only when there is no request whose answer you could use instead:
+
+- **Never gate a fetch on a permission.** Call the endpoint; the request is the answer. A backend
+  that says no returns 403 and `fetchWithErrorHandling` deals with it.
+- **Never let a permission decide whether a section renders.** An empty list renders as an empty
+  list, not as a missing panel.
+- **Per-item capability comes from the response.** If a list carries `editable` / `deletable` or
+  similar per-entry flags, those are the source of truth for that entry's actions — do not add a
+  parallel permission field for the same decision.
+- **Do gate an action the user would otherwise complete before being refused.** Nothing tells you
+  whether a user may create something until they submit, and finding out via 403 after they have
+  written the comment is not acceptable. A `create` permission is the right gate for a create
+  button; an `editable` flag the response already gave you is not something a permission should
+  second-guess.
+
 ## Rules
 
 1. The user MUST specify which repo to use (e.g. `eco-scale-bfw`, `eco-scale-cb`). If not provided, ask.
@@ -88,3 +136,4 @@ import { createClientFetchFunction } from "@/shared/backend/createClientFetchFun
 5. Only add a `payloadSchema` for non-GET requests
 6. Use `server.ts` by default; only use `client.ts` for polling or dynamic client-side requests
 7. Do NOT run any `tsc` or `pnpm` commands after implementation
+8. NEVER create a secure-fetch function for `/permissions` — see "Permissions Are Not a Normal Endpoint"
