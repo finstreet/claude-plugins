@@ -68,6 +68,7 @@ Invoked as `/finstreet-fe:<name>`. Most also trigger automatically based on cont
 - `mock-api` — Mock endpoints that plug into the secure-fetch pattern
 - `path-resolver` — Resolve feature/backend paths from naming conventions
 - `routes` — Add or look up entries in `routes.ts`
+- `gcp-env-var` — Wire a new env var through Dockerfile + cloudbuild.yaml
 
 ## Changelog
 
