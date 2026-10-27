@@ -42,7 +42,7 @@ export const {Product}{Role}{PanelName}TaskPanel = ({
       name={t("title")}
     >
       <TaskPanelHeader>
-        <TaskPanelStatus status={completed ? "done" : "active"} />
+        <TaskPanelStatus status={completed ? "done" : "todo"} />
         <TaskPanelTitle>{t("title")}</TaskPanelTitle>
       </TaskPanelHeader>
     </TaskPanel>
@@ -92,7 +92,7 @@ export const {Product}{Role}{PanelName}TaskPanel = ({
           name={t("title")}
         >
           <TaskPanelHeader>
-            <TaskPanelStatus status={completed ? "done" : "active"} />
+            <TaskPanelStatus status={completed ? "done" : "todo"} />
             <TaskPanelTitle>{t("title")}</TaskPanelTitle>
           </TaskPanelHeader>
         </TaskPanel>
@@ -137,12 +137,14 @@ The most common header — a status dot and a title.
 
 ```tsx
 <TaskPanelHeader>
-  <TaskPanelStatus status={completed ? "done" : "active"} />
+  <TaskPanelStatus status={completed ? "done" : "todo"} />
   <TaskPanelTitle>{t("title")}</TaskPanelTitle>
 </TaskPanelHeader>
 ```
 
-`TaskPanelStatus` accepts: `"done"`, `"partiallyDone"`, `"active"`, `"inactive"`, `"warning"`.
+`TaskPanelStatus` accepts: `"todo"`, `"done"`, `"partiallyDone"`, `"active"`, `"inactive"`, `"warning"`.
+
+An unfinished task is `"todo"` (an empty ring), not `"active"`: `"active"` draws a filled dot inside the ring. The same goes for `SubTask`'s `status`.
 
 #### Header with Summary
 
@@ -153,7 +155,7 @@ import { Typography } from "@finstreet/ui/components/base/Typography";
 import { Box } from "@styled-system/jsx";
 
 <TaskPanelHeader>
-  <TaskPanelStatus status={completed ? "done" : "active"} />
+  <TaskPanelStatus status={completed ? "done" : "todo"} />
   <TaskPanelTitle>{t("title")}</TaskPanelTitle>
   <Box hideBelow={"lg"}>
     <TaskPanelSummary justifyContent={"flex-end"}>
@@ -226,7 +228,7 @@ export const {Product}{Role}{PanelName}TaskPanel = ({
     <TaskPanel collapsible startOpen={!contractDetails.completed}>
       <TaskPanelHeader>
         <TaskPanelStatus
-          status={contractDetails.completed ? "done" : "active"}
+          status={contractDetails.completed ? "done" : "todo"}
         />
         <TaskPanelTitle>{t("title")}</TaskPanelTitle>
         <Box hideBelow={"lg"}>
@@ -247,7 +249,7 @@ export const {Product}{Role}{PanelName}TaskPanel = ({
           <Typography as="p">{t("description")}</Typography>
         </TaskPanelDescription>
         <SubTask
-          status={contractDetails.subtaskOne.completed ? "done" : "active"}
+          status={contractDetails.subtaskOne.completed ? "done" : "todo"}
           actionLabel={
             contractDetails.subtaskOne.completed
               ? t("subtasks.subtaskOne.actions.viewData")
@@ -282,7 +284,7 @@ The SubTask navigates somewhere. Provide `href` and `name`. An arrow-right icon 
 
 ```tsx
 <SubTask
-  status={completed ? "done" : "active"}
+  status={completed ? "done" : "todo"}
   href={routes.{role}.{resource}.{action}(financingCaseId)}
   name={t("subtasks.example.title")}
   actionLabel={
@@ -301,7 +303,7 @@ The SubTask navigates somewhere. Provide `href` and `name`. An arrow-right icon 
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `status` | `"done" \| "partiallyDone" \| "active" \| "inactive" \| "warning"` | yes | Visual status indicator |
+| `status` | `"todo" \| "done" \| "partiallyDone" \| "active" \| "inactive" \| "warning"` | yes | Visual status indicator |
 | `href` | `string` | yes | Navigation URL |
 | `name` | `string` | yes | Accessible name for the link |
 | `children` | `React.ReactNode` | yes | Display label |
@@ -337,7 +339,7 @@ The SubTask is non-interactive and shows static information with a custom annota
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `status` | `"done" \| "partiallyDone" \| "active" \| "inactive" \| "warning"` | yes | Visual status indicator |
+| `status` | `"todo" \| "done" \| "partiallyDone" \| "active" \| "inactive" \| "warning"` | yes | Visual status indicator |
 | `annotation` | `React.ReactNode` | yes | Custom content on the right side |
 | `children` | `React.ReactNode` | yes | Display label |
 | `data-testid` | `string` | no | Test identifier |
@@ -350,7 +352,7 @@ SubTask children can include a secondary description below the title:
 
 ```tsx
 <SubTask
-  status="active"
+  status="todo"
   href={routes.{role}.{resource}.{action}(financingCaseId)}
   name={t("subtasks.payment.title")}
   actionLabel={t("subtasks.payment.actions.addData")}
@@ -394,13 +396,13 @@ export const {Product}{Role}{PanelName}TaskPanel = ({
   return (
     <TaskPanel collapsible startOpen={!details.completed}>
       <TaskPanelHeader>
-        <TaskPanelStatus status={details.completed ? "done" : "active"} />
+        <TaskPanelStatus status={details.completed ? "done" : "todo"} />
         <TaskPanelTitle>{t("title")}</TaskPanelTitle>
       </TaskPanelHeader>
       <TaskPanelContent>
         {/* Link mode SubTask — navigates to a page */}
         <SubTask
-          status={details.stepOne.completed ? "done" : "active"}
+          status={details.stepOne.completed ? "done" : "todo"}
           href={routes.{role}.{resource}.stepOne(financingCaseId)}
           name={t("subtasks.stepOne.title")}
           actionLabel={
@@ -415,7 +417,7 @@ export const {Product}{Role}{PanelName}TaskPanel = ({
         </SubTask>
         {/* Annotation mode SubTask — non-interactive, shows status text */}
         <SubTask
-          status={details.stepTwo.completed ? "done" : "active"}
+          status={details.stepTwo.completed ? "done" : "todo"}
           annotation={
             details.stepTwo.completed
               ? t("subtasks.stepTwo.annotation.completed")

@@ -82,7 +82,7 @@ import { VStack } from "@styled-system/jsx";
 2. `TasksAndActionsLayout` goes INSIDE each TaskPanel, not around the TaskGroup
 3. Each TaskPanel always wraps itself in `TasksAndActionsLayout` with `tasks` and `actions` areas — even if there are no actions (use `<></>` as empty placeholder)
 4. `prefetch={true}` and `scroll={true}` on `TaskPanel` and `SubTask` unless told otherwise
-5. Use `done` / `active` status — only use `inactive` or `warning` if explicitly required
+5. Use `done` / `todo` status (`completed ? "done" : "todo"`): `todo` is the empty ring, `active` draws a dot and is not used for unfinished tasks. Only use `inactive` or `warning` if explicitly required
 6. ActionPanels always use `variant="invisible"`
 7. ActionPanels are always `"use client"` components
 8. Use `useExtracted` from `next-intl` (not `useTranslations`)

@@ -43,7 +43,7 @@ export const PersonalLoanFspRequiredDocumentsTaskPanel = ({
           name={t("title")}
         >
           <TaskPanelHeader>
-            <TaskPanelStatus status={completed ? "done" : "active"} />
+            <TaskPanelStatus status={completed ? "done" : "todo"} />
             <TaskPanelTitle>{t("title")}</TaskPanelTitle>
             <Box hideBelow={"lg"}>
               <TaskPanelSummary justifyContent={"flex-end"}>
