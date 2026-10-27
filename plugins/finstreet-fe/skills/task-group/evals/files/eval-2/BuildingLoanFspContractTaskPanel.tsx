@@ -40,14 +40,14 @@ export const BuildingLoanFspContractTaskPanel = ({
         <TaskPanel collapsible>
           <TaskPanelHeader>
             <TaskPanelStatus
-              status={contract.completed ? "done" : "active"}
+              status={contract.completed ? "done" : "todo"}
             />
             <TaskPanelTitle>{t("title")}</TaskPanelTitle>
           </TaskPanelHeader>
           <TaskPanelContent>
             <SubTask
               status={
-                contract.bankDetails.completed ? "done" : "active"
+                contract.bankDetails.completed ? "done" : "todo"
               }
               actionLabel={
                 contract.bankDetails.completed
@@ -65,7 +65,7 @@ export const BuildingLoanFspContractTaskPanel = ({
             </SubTask>
             <SubTask
               status={
-                contract.guarantors.completed ? "done" : "active"
+                contract.guarantors.completed ? "done" : "todo"
               }
               actionLabel={
                 contract.guarantors.completed

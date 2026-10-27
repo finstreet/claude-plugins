@@ -36,7 +36,7 @@ export const BuildingLoanFspApplicationTaskPanel = ({
           name={t("title")}
         >
           <TaskPanelHeader>
-            <TaskPanelStatus status={completed ? "done" : "active"} />
+            <TaskPanelStatus status={completed ? "done" : "todo"} />
             <TaskPanelTitle>{t("title")}</TaskPanelTitle>
           </TaskPanelHeader>
         </TaskPanel>
